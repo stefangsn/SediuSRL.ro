@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Resetare Cookie-uri</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px 20px;
+      text-align: center;
+      background: #f9f9f9;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .btn {
+      background-color: #ed0800;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #c30600;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Resetare cookie-uri</h1>
+  <p>Apasă butonul de mai jos pentru a șterge toate cookie-urile salvate de acest site (dacă sunt accesibile din browser).</p>
+  <button class="btn" onclick="resetCookies()">Șterge cookie-urile</button>
+
+  <div id="status"></div>
+  <p><a href="/" style="margin-top:30px;display:block;text-decoration:underline;">← Înapoi la pagina principală</a></p>
+
+  <script>
+    function resetCookies() {
+      const cookies = document.cookie.split(";");
+      let count = 0;
+
+      cookies.forEach(cookie => {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+
+        // Încearcă să le ștergi pe mai multe variante
+        const paths = ["/", window.location.pathname];
+        const domains = [window.location.hostname, "." + window.location.hostname];
+
+        paths.forEach(path => {
+          domains.forEach(domain => {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=${path};domain=${domain};`;
+          });
+        });
+
+        // fallback simplu
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;`;
+        count++;
+      });
+
+      document.getElementById("status").textContent =
+        `✅ Au fost șterse ${count} cookie-uri (dacă sunt accesibile).`;
+    }
+  </script>
+
+</body>
+</html>
